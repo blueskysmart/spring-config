@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:beans xmlns:b="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.springframework.org/schema/security"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+
+    <http disable-url-rewriting="false">
+        <headers disabled="true" />
+        <csrf disabled="true" />
+		<intercept-url pattern="/rest/messageLoader" access="permitAll"/>
+        <intercept-url pattern="/rest/auth/login" access="permitAll" />
+        <intercept-url pattern="/rest/auth/login/sso" access="permitAll" />
+        <intercept-url pattern="/rest/**" access="hasRole('EDITOR')" />
+        <logout logout-url="/j_spring_security_logout" logout-success-url="/" />
+        <http-basic entry-point-ref="restAuthenticationEntryPoint" />
+    </http>
+
+    <authentication-manager>
+        <authentication-provider ref="customAuthenticationProvider">
+        </authentication-provider>
+    </authentication-manager>
+
+    <b:bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
+        <b:constructor-arg name="strength" value="11" />
+    </b:bean>
+</b:beans>
